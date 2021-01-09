@@ -164,7 +164,7 @@ index 0000000000000000000000000000000000000000..2751ce7f1556da07ef853807a588f096
 +        if (profile.getId() == null) {
 +            final GameProfile profile;
 +            if (onlineMode) {
-+                profile = lookupUUID ? userCache.getProfile(name) : userCache.getProfileIfCached(name);
++                profile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8)), name);
 +            } else {
 +                // Make an OfflinePlayer using an offline mode UUID since the name has no profile
 +                profile = new GameProfile(UUID.nameUUIDFromBytes(("OfflinePlayer:" + name).getBytes(Charsets.UTF_8)), name);
@@ -460,7 +460,7 @@ index 49649e70ee8bfb3dacd63a88a180f0f329f308c0..dacb8563bc823c8f6f1e1e10f2b8b989
  
              File file = (File) optionset.valueOf("universe"); // CraftBukkit
 -            YggdrasilAuthenticationService yggdrasilauthenticationservice = new YggdrasilAuthenticationService(Proxy.NO_PROXY);
-+            YggdrasilAuthenticationService yggdrasilauthenticationservice = new com.destroystokyo.paper.profile.PaperAuthenticationService(Proxy.NO_PROXY); // Paper
++            YggdrasilAuthenticationService yggdrasilauthenticationservice = new YggdrasilAuthenticationService(Proxy.NO_PROXY);
              MinecraftSessionService minecraftsessionservice = yggdrasilauthenticationservice.createMinecraftSessionService();
              GameProfileRepository gameprofilerepository = yggdrasilauthenticationservice.createProfileRepository();
              UserCache usercache = new UserCache(gameprofilerepository, new File(file, MinecraftServer.b.getName()));
@@ -547,21 +547,3 @@ index 3e3f2a3d3b5ab32f498b4dd65f35f4c26470790f..6137bb510eec7d8c2ff2908b1255e56d
 +    }
      // Paper end
  }
-diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSkull.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSkull.java
-index c57634317b661e05ddd085d04f7338045445069f..da9ad92f6c999d87b790852cb3129f9b04f624a9 100644
---- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSkull.java
-+++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftMetaSkull.java
-@@ -79,6 +79,13 @@ class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
-     }
- 
-     private void setProfile(GameProfile profile) {
-+        // Paper start
-+        if (profile != null) {
-+            com.destroystokyo.paper.profile.CraftPlayerProfile paperProfile = new com.destroystokyo.paper.profile.CraftPlayerProfile(profile);
-+            paperProfile.completeFromCache(false, true);
-+            profile = paperProfile.getGameProfile();
-+        }
-+        // Paper end
-         this.profile = profile;
-         this.serializedProfile = (profile == null) ? null : GameProfileSerializer.serialize(new NBTTagCompound(), profile);
-     }

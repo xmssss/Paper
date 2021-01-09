@@ -23,7 +23,7 @@ index 80a95441ec2b8394b74818ab74de070ba1ce2754..9b2fba00b574087575ba70c82613fbcd
 +                file = new File(bukkitConfiguration.getString("settings.world-container", "."));
 +            }
 +            // Paper end - fix SPIGOT-5824
-             YggdrasilAuthenticationService yggdrasilauthenticationservice = new com.destroystokyo.paper.profile.PaperAuthenticationService(Proxy.NO_PROXY); // Paper
+             YggdrasilAuthenticationService yggdrasilauthenticationservice = new YggdrasilAuthenticationService(Proxy.NO_PROXY);
              MinecraftSessionService minecraftsessionservice = yggdrasilauthenticationservice.createMinecraftSessionService();
              GameProfileRepository gameprofilerepository = yggdrasilauthenticationservice.createProfileRepository();
 -            UserCache usercache = new UserCache(gameprofilerepository, new File(file, MinecraftServer.b.getName()));
